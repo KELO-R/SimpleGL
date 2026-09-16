@@ -31,27 +31,24 @@ target_link_libraries(${PROJECT_NAME}
 )
 #----end----
 
-#[[
 target_sources(${PROJECT_NAME}
     PRIVATE
-    #src/lib.cpp
+	src/window.cpp
+	src/engine.cpp
 	src/shader.cpp
 	src/shader_program.cpp
-	src/renderer.cpp
 	src/mesh.cpp
     PUBLIC
     FILE_SET HEADERS
     TYPE HEADERS
     BASE_DIRS src
     FILES 
-    #	src/lib.h
-	src/resources.h
+	src/window.h
+	src/engine.h
 	src/shader.h
 	src/shader_program.h
-	src/gl_helper.h
-	src/attribute_layout.h
 	src/mesh.h
-	src/renderer.h
+	src/attribute_layout.h
 )
 
 add_executable(test)
@@ -64,14 +61,15 @@ target_sources(test
     TYPE HEADERS
     BASE_DIRS src
     FILES 
-	src/resources.h
+	src/window.h
+	src/engine.h
 	src/shader.h
 	src/shader_program.h
-	src/renderer.h
+	src/mesh.h
+	src/attribute_layout.h
 )	
 
 target_link_libraries(test
     PRIVATE
 	${PROJECT_NAME}
 )
-]]

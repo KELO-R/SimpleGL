@@ -1,18 +1,21 @@
 #pragma once
 #include <glad/glad.h>
+#include <memory>
 #include <vector>
 #include "shader.h"
 
 class ShaderProgram{
-    GLuint id;
-    ShaderProgram(GLuint id)
-	:id(id){}
-public:
-    ~ShaderProgram(){
-	glDeleteProgram(id);
+    static void free_program(GLuint* program){
+	glDeleteProgram(*program);
+	delete program;
     }
-    ShaderProgram(const ShaderProgram&) = delete;
-    ShaderProgram& operator=(const ShaderProgram&) = delete;
-    static std::expected<ShaderProgram, std::string> try_from(const std::vector<const Shader*>& shaders);
+
+    std::unique_ptr<GLuint, decltype(&free_program)> program;
+
+    ShaderProgram(std::unique_ptr<GLuint, decltype(&free_program)>&& program)
+	:program(std::move(program)){}
+public:
+    static std::expected<ShaderProgram, std::string> try_from(const std::vector<Shader>& shaders);
+
     void use_program() const;
 };

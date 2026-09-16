@@ -1,4 +1,6 @@
 .cache/
 build/
 **/__cmake_systeminformation/
+CMake*/
+CMakeCache*.txt
 

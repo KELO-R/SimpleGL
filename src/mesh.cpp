@@ -1,7 +1,7 @@
 #include "mesh.h"
 #include <format>
 #include <iostream>
-#include <gl_helper.h>
+#include "gl_helper.h"
 
 std::expected<void, std::string>
 inline setup_attrib_layout(const std::vector<AttributeLayout> &attributes){
@@ -26,19 +26,19 @@ std::expected<Mesh, std::string> Mesh::try_from(
 	const std::vector<AttributeLayout>& layout,
 	const void* vertices, size_t vertices_byte_size,
 	const void* indices, size_t indices_byte_size, size_t indices_count){
-    unsigned int vao;
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    Vao vao {new GLuint, free_vao};
+    glGenVertexArrays(1, vao.get());
+    glBindVertexArray(*vao);
 
-    unsigned int vbo;
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    Vao vbo {new GLuint, free_bo};
+    glGenBuffers(1, vbo.get());
+    glBindBuffer(GL_ARRAY_BUFFER, *vbo);
     glBufferData(GL_ARRAY_BUFFER, vertices_byte_size, vertices, GL_STATIC_DRAW);
     check_gl("after vbo");
 
-    unsigned int ebo;
-    glGenBuffers(1, &ebo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    Vao ebo {new GLuint, free_bo};
+    glGenBuffers(1, ebo.get());
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_byte_size, indices, GL_STATIC_DRAW);
     check_gl("after ebo");
 
@@ -49,13 +49,11 @@ std::expected<Mesh, std::string> Mesh::try_from(
     }
 
     glBindVertexArray(0);
-    return Mesh(vao, indices_count);
+    return Mesh(std::move(vao), std::move(vbo), std::move(ebo), indices_count);
 }
 
 void Mesh::draw_elements() const{
-    std::cout <<std::format("glIsVertexArray:{}", glIsVertexArray(vao)) << '\n';
-    glBindVertexArray(vao);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    //glDrawElements(GL_TRIANGLES, indices_count, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(*vao);
+    glDrawElements(GL_TRIANGLES, indices_count, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
