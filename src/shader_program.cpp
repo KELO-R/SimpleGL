@@ -26,3 +26,6 @@ ShaderProgram::try_from(const std::vector<Shader>& shaders){
 void ShaderProgram::use_program() const{
     glUseProgram(*program);
 }
+GLint ShaderProgram::get_uniform_location(std::string_view uniform_name) const{
+    return glGetUniformLocation(*program, uniform_name.cbegin());
+}

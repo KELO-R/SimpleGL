@@ -6,16 +6,19 @@
 std::expected<void, std::string>
 inline setup_attrib_layout(const std::vector<AttributeLayout> &attributes){
     unsigned int stride_size{};
-    for(size_t i{1}; i < attributes.size(); i++){
-	stride_size += attributes[i].count * glenum_size(attributes[i].type);
+    if (attributes.size() > 1){
+	for(size_t i{}; i < attributes.size(); i++){
+	    stride_size += attributes[i].count * glenum_size(attributes[i].type);
+	}
     }
     std::cout << std::format("stride_size:{}", stride_size) <<'\n';
 
-    const char* offset = (char*)(void*)(0);
+    const char* offset = (char*)(0);
     for(size_t i{}; i < attributes.size(); i++){
 	const AttributeLayout &attrib = attributes[i];
 	glVertexAttribPointer(i, attrib.count, unwrap(attrib.type), attrib.normalize, stride_size, (void*)offset);
-	offset += attrib.count + glenum_size(attrib.type);
+	std::cout << std::format("stride_size:{}", (int)((char*)offset - (char*)0)) <<'\n';
+	offset += attrib.count * glenum_size(attrib.type);
 	glEnableVertexAttribArray(i);
     }
     return {};

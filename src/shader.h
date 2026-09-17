@@ -14,11 +14,11 @@ private:
 	delete shader;
     }
     std::unique_ptr<GLuint, decltype(&free_shader)> shader;
-    int type;
+    GLenum type;
 
-    Shader(std::unique_ptr<GLuint, decltype(&free_shader)>&& shader_name, int type)
+    Shader(std::unique_ptr<GLuint, decltype(&free_shader)>&& shader_name, GLenum type)
 	: shader(std::move(shader_name)), type(type){}
 public:
     friend class ShaderProgram;
-    static std::expected<Shader, std::string> try_from(const char* const source, GLuint gl_shader_type);
+    static std::expected<Shader, std::string> try_from(const char* const source, GLenum gl_shader_type);
 };

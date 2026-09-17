@@ -3,8 +3,15 @@
 #include "window.h"
 #include "shader_program.h"
 #include "mesh.h"
+#include "texture.h"
+#include "gl_helper.h"
 #include <iostream>
 #include <vector>
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+}
 
 int main(){
     auto engine_r = EngineBuilder().build();
@@ -21,21 +28,30 @@ int main(){
     }
     Window window {std::move(window_r.value())};
     window.make_context_current();
+    glfwSetFramebufferSizeCallback(glfwGetCurrentContext(), framebuffer_size_callback);  
+
 
     const char* vertex_shader_source = R"(#version 330 core
 	layout (location = 0) in vec3 aPos;
+	layout (location = 1) in vec2 aTexCoord;
+	out vec2 TexCoord;
 
 	void main()
 	{
 	    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+	    TexCoord = aTexCoord;
 	}
     )";
     const char* fragment_shader_source = R"(#version 330 core
+	uniform sampler2D ourTexture;
+	in vec2 TexCoord;
 	out vec4 FragColor;
 
 	void main()
 	{
-	    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+	    FragColor = texture(ourTexture, TexCoord);
+	    //FragColor = vec4(TexCoord, 0.0, 1.0);
+	    //FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 	} 
     )";
 
@@ -65,10 +81,11 @@ int main(){
     ShaderProgram program {std::move(program_r.value())};
 
     float vertices[] = {
-	 0.5f,  0.5f, 0.0f,  // top right
-	 0.5f, -0.5f, 0.0f,  // bottom right
-	-0.5f, -0.5f, 0.0f,  // bottom left
-	-0.5f,  0.5f, 0.0f   // top left 
+	// positions          // texture coords
+	 0.5f,  0.5f, 0.0f,   1.0f, 1.0f,   // top right
+	 0.5f, -0.5f, 0.0f,   1.0f, 0.0f,   // bottom right
+	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f,   // bottom left
+	-0.5f,  0.5f, 0.0f,   0.0f, 1.0f    // top left 
     };
     unsigned int indices[] = {  // note that we start from 0!
 	0, 1, 3,   // first triangle
@@ -76,7 +93,8 @@ int main(){
     }; 
 
     std::vector<AttributeLayout> layout {
-	AttributeLayout(3, GLenumWrapper::FLOAT, GL_FALSE)
+	AttributeLayout(3, GLenumWrapper::FLOAT, GL_FALSE),
+	AttributeLayout(2, GLenumWrapper::FLOAT, GL_FALSE)
     }; 
 
     auto mesh_r = Mesh::try_from(layout, 
@@ -88,11 +106,32 @@ int main(){
     }
     Mesh mesh {std::move(mesh_r.value())};
 
+    auto image_path = "C:/Users/oleks/curseforge/minecraft/Instances/TerraFirmaCraft Optimized (TFC)/saves/chachacha/icon.png";
+    auto image_r = Image::from_file(image_path, 3);
+    if(!image_r.has_value()){
+	std::cout << image_r.error() << std::endl;
+	return -1;
+    }
+    Image image = std::move(image_r.value());
+    
+    auto texture_r = TextureBuilder().from_image(image).build();
+    if(!texture_r){
+	std::cout << texture_r.error() << std::endl;
+	return -1;
+    }
+    check_gl("after before_texture_creation");
+    glActiveTexture(GL_TEXTURE0);
+    Texture texture = std::move(texture_r.value());
+    check_gl("after texture_creation");
+
     glClearColor(0.3f, 0.4f, 0.1f, 1.0f);
-    program.use_program();
+
     while(!window.should_close()){
 	glfwPollEvents();
 	glClear(GL_COLOR_BUFFER_BIT);
+	program.use_program();
+	texture.bind_texture();
+	glUniform1i(glGetUniformLocation(program.get_uniform_location("ourTexture"), "texture1"), 0);
 	mesh.draw_elements();
 	window.swap_buffers();
     }

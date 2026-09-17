@@ -38,6 +38,8 @@ target_sources(${PROJECT_NAME}
 	src/shader.cpp
 	src/shader_program.cpp
 	src/mesh.cpp
+	src/image.cpp
+	src/texture.cpp
     PUBLIC
     FILE_SET HEADERS
     TYPE HEADERS
@@ -49,6 +51,8 @@ target_sources(${PROJECT_NAME}
 	src/shader_program.h
 	src/mesh.h
 	src/attribute_layout.h
+	src/image.h
+	src/texture.h
 )
 
 add_executable(test)

@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 
-std::expected<Shader, std::string> Shader::try_from(const char* const source, GLuint gl_shader_type){
+std::expected<Shader, std::string> Shader::try_from(const char* const source, GLenum gl_shader_type){
     std::unique_ptr<GLuint, decltype(&free_shader)> shader(
 	    new GLuint(glCreateShader(gl_shader_type)), free_shader);
     glShaderSource(*shader, 1, &source, NULL);
