@@ -1,6 +1,6 @@
 #include "mesh.h"
 #include <format>
-#include <iostream>
+//#include <iostream>
 #include "gl_helper.h"
 
 std::expected<void, std::string>
@@ -11,13 +11,13 @@ inline setup_attrib_layout(const std::vector<AttributeLayout> &attributes){
 	    stride_size += attributes[i].count * glenum_size(attributes[i].type);
 	}
     }
-    std::cout << std::format("stride_size:{}", stride_size) <<'\n';
+    //std::cout << std::format("stride_size:{}", stride_size) <<'\n';
 
     const char* offset = (char*)(0);
     for(size_t i{}; i < attributes.size(); i++){
 	const AttributeLayout &attrib = attributes[i];
 	glVertexAttribPointer(i, attrib.count, unwrap(attrib.type), attrib.normalize, stride_size, (void*)offset);
-	std::cout << std::format("stride_size:{}", (int)((char*)offset - (char*)0)) <<'\n';
+	//std::cout << std::format("stride_size:{}", (int)((char*)offset - (char*)0)) <<'\n';
 	offset += attrib.count * glenum_size(attrib.type);
 	glEnableVertexAttribArray(i);
     }

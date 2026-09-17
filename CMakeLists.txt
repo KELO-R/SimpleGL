@@ -10,7 +10,10 @@ add_library(${PROJECT_NAME})
 #----dependencies----
 add_subdirectory(dep/glfw)
 target_sources(${PROJECT_NAME}
-    PRIVATE dep/glad/src/glad.c
+    PRIVATE 
+	dep/glad/src/glad.c
+	dep/stb/stb_image.c 
+	dep/miniaudio/miniaudio.c
     PUBLIC
     FILE_SET glad_headers
     TYPE HEADERS
@@ -18,12 +21,20 @@ target_sources(${PROJECT_NAME}
     FILES 
 	dep/glad/include/glad/glad.h
 	dep/glad/include/KHR/khrplatform.h
+
     PUBLIC
     FILE_SET stb_headers
     TYPE HEADERS
     BASE_DIRS dep/stb
     FILES 
 	dep/stb/stb_image.h
+
+    PUBLIC
+    FILE_SET miniaudio_headers
+    TYPE HEADERS
+    BASE_DIRS dep/miniaudio
+    FILES
+	dep/miniaudio/miniaudio.h
 )
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
@@ -40,6 +51,7 @@ target_sources(${PROJECT_NAME}
 	src/mesh.cpp
 	src/image.cpp
 	src/texture.cpp
+	src/audio.cpp
     PUBLIC
     FILE_SET HEADERS
     TYPE HEADERS
@@ -53,6 +65,7 @@ target_sources(${PROJECT_NAME}
 	src/attribute_layout.h
 	src/image.h
 	src/texture.h
+	src/audio.h
 )
 
 add_executable(test)

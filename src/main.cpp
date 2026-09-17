@@ -5,6 +5,7 @@
 #include "mesh.h"
 #include "texture.h"
 #include "gl_helper.h"
+#include "audio.h"
 #include <iostream>
 #include <vector>
 
@@ -112,19 +113,26 @@ int main(){
 	std::cout << image_r.error() << std::endl;
 	return -1;
     }
-    Image image = std::move(image_r.value());
+    Image image {std::move(image_r.value())};
     
     auto texture_r = TextureBuilder().from_image(image).build();
     if(!texture_r){
 	std::cout << texture_r.error() << std::endl;
 	return -1;
     }
-    check_gl("after before_texture_creation");
     glActiveTexture(GL_TEXTURE0);
     Texture texture = std::move(texture_r.value());
-    check_gl("after texture_creation");
+
+    auto audio_r = Audio::create();
+    if(!audio_r.has_value()){
+	std::cout << audio_r.error() << std::endl;
+	return -1;
+    }
+    Audio audio {std::move(audio_r.value())};
+    audio.play("C:/Users/oleks/Downloads/381384__vabsounds__jungle.wav");
 
     glClearColor(0.3f, 0.4f, 0.1f, 1.0f);
+
 
     while(!window.should_close()){
 	glfwPollEvents();
