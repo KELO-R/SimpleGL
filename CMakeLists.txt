@@ -9,6 +9,12 @@ add_library(${PROJECT_NAME})
 
 #----dependencies----
 add_subdirectory(dep/glfw)
+add_subdirectory(dep/glm)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+	glfw
+	glm::glm-header-only
+)
 target_sources(${PROJECT_NAME}
     PRIVATE 
 	dep/glad/src/glad.c
@@ -35,10 +41,6 @@ target_sources(${PROJECT_NAME}
     BASE_DIRS dep/miniaudio
     FILES
 	dep/miniaudio/miniaudio.h
-)
-target_link_libraries(${PROJECT_NAME}
-    PUBLIC
-	glfw
 )
 #----end----
 

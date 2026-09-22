@@ -6,6 +6,7 @@
 #include "texture.h"
 #include "gl_helper.h"
 #include "audio.h"
+#include <format>
 #include <iostream>
 #include <vector>
 
@@ -80,6 +81,11 @@ int main(){
 	return -1;
     }
     ShaderProgram program {std::move(program_r.value())};
+    auto uniforms = program.get_uniforms();
+    for(size_t i{}; i < uniforms.size(); i++){
+	std::cout << std::format("uniform_name: {}\n\tid: {}\n\tsize: {}\n\ttype: {}\n\n",
+	    uniforms[i].name, i, uniforms[i].size, uniforms[i].type);
+    }
 
     float vertices[] = {
 	// positions          // texture coords
@@ -107,7 +113,7 @@ int main(){
     }
     Mesh mesh {std::move(mesh_r.value())};
 
-    auto image_path = "C:/Users/oleks/curseforge/minecraft/Instances/TerraFirmaCraft Optimized (TFC)/saves/chachacha/icon.png";
+    auto image_path = "image.png";
     auto image_r = Image::from_file(image_path, 3);
     if(!image_r.has_value()){
 	std::cout << image_r.error() << std::endl;
@@ -129,7 +135,7 @@ int main(){
 	return -1;
     }
     Audio audio {std::move(audio_r.value())};
-    audio.play("C:/Users/oleks/Downloads/381384__vabsounds__jungle.wav");
+    audio.play("music.wav");
 
     glClearColor(0.3f, 0.4f, 0.1f, 1.0f);
 

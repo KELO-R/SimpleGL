@@ -1,6 +1,10 @@
 #include "shader_program.h"
 #include <format>
 
+std::vector<ShaderProgram::Uniform> ShaderProgram::extract_uniforms(){
+    return uniforms;
+}
+
 std::expected<ShaderProgram, std::string> 
 ShaderProgram::try_from(const std::vector<Shader>& shaders){
     std::unique_ptr<GLuint, decltype(&free_program)> program(
@@ -20,8 +24,22 @@ ShaderProgram::try_from(const std::vector<Shader>& shaders){
 	glGetProgramInfoLog(*program, log_length, &log_length, compile_log.data());
 	return std::unexpected(std::format("Shader Program linking failed!\n {}", compile_log));
     }
-    ;
-    return ShaderProgram(std::move(program));
+
+    std::vector<Uniform> uniforms;
+    GLint active_uniforms_count;
+    glGetProgramiv(*program, GL_ACTIVE_UNIFORMS, &active_uniforms_count);
+    uniforms.resize(active_uniforms_count);
+    GLint active_uniform_name_max_length;
+    glGetProgramiv(*program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &active_uniform_name_max_length);
+    for(GLuint i{}; i < active_uniforms_count; i++){
+	Uniform& u = uniforms[i];
+	u.name.resize(active_uniform_name_max_length);
+	GLsizei actual_name_size;
+	glGetActiveUniform(*program, i, active_uniform_name_max_length, &actual_name_size, 
+	    &u.size, &u.type, u.name.data());
+	u.name.resize(actual_name_size);
+    }
+    return ShaderProgram(std::move(program), std::move(uniforms));
 }
 void ShaderProgram::use_program() const{
     glUseProgram(*program);
