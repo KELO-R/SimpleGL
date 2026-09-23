@@ -53,7 +53,7 @@ target_sources(${PROJECT_NAME}
 	src/mesh.cpp
 	src/image.cpp
 	src/texture.cpp
-	src/audio.cpp
+	src/audio/audio.cpp
     PUBLIC
     FILE_SET HEADERS
     TYPE HEADERS
@@ -67,28 +67,17 @@ target_sources(${PROJECT_NAME}
 	src/attribute_layout.h
 	src/image.h
 	src/texture.h
-	src/audio.h
+	src/audio/audio.h
+	src/draw_objects/draw_object.h
 )
 
-add_executable(test)
-
-target_sources(test
+#examples
+add_executable(image_with_sound)
+target_sources(image_with_sound
     PRIVATE
-	src/main.cpp
-    PUBLIC
-    FILE_SET HEADERS
-    TYPE HEADERS
-    BASE_DIRS src
-    FILES 
-	src/window.h
-	src/engine.h
-	src/shader.h
-	src/shader_program.h
-	src/mesh.h
-	src/attribute_layout.h
+	examples/image_with_sound/main.cpp
 )	
-
-target_link_libraries(test
+target_link_libraries(image_with_sound
     PRIVATE
 	${PROJECT_NAME}
 )

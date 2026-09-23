@@ -17,7 +17,6 @@ private:
     Texture(std::unique_ptr<GLuint, decltype(&free_texture)>&& texture, GLenum target)
 	:texture(std::move(texture)), target(target){}
 public:
-
     static std::expected<Texture, std::string> texture2d(
 	GLsizei width,
 	GLsizei height,
@@ -34,7 +33,8 @@ public:
 	GLenum mag_filter = GL_LINEAR
     );
 
-    inline void bind_texture(){
+    inline void bind_texture(GLenum texture_unit_slot){
+	glActiveTexture(texture_unit_slot);
 	glBindTexture(GL_TEXTURE_2D, *texture);
     }
 };

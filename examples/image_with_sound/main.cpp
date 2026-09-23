@@ -5,7 +5,7 @@
 #include "mesh.h"
 #include "texture.h"
 #include "gl_helper.h"
-#include "audio.h"
+#include "audio/audio.h"
 #include <format>
 #include <iostream>
 #include <vector>
@@ -30,7 +30,7 @@ int main(){
     }
     Window window {std::move(window_r.value())};
     window.make_context_current();
-    glfwSetFramebufferSizeCallback(glfwGetCurrentContext(), framebuffer_size_callback);  
+    glfwSetFramebufferSizeCallback(glfwGetCurrentContext(), framebuffer_size_callback);
 
 
     const char* vertex_shader_source = R"(#version 330 core
@@ -126,7 +126,6 @@ int main(){
 	std::cout << texture_r.error() << std::endl;
 	return -1;
     }
-    glActiveTexture(GL_TEXTURE0);
     Texture texture = std::move(texture_r.value());
 
     auto audio_r = Audio::create();
@@ -144,8 +143,11 @@ int main(){
 	glfwPollEvents();
 	glClear(GL_COLOR_BUFFER_BIT);
 	program.use_program();
-	texture.bind_texture();
-	glUniform1i(glGetUniformLocation(program.get_uniform_location("ourTexture"), "texture1"), 0);
+	texture.bind_texture(GL_TEXTURE0);
+	auto r = program.set_uniform(0, 0);
+	if(!r.has_value()){
+	    std::cout << r.error();
+	}
 	mesh.draw_elements();
 	window.swap_buffers();
     }
