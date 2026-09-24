@@ -33,7 +33,7 @@ public:
 	GLenum mag_filter = GL_LINEAR
     );
 
-    inline void bind_texture(GLenum texture_unit_slot){
+    inline void bind_texture(GLenum texture_unit_slot) const{
 	glActiveTexture(texture_unit_slot);
 	glBindTexture(GL_TEXTURE_2D, *texture);
     }

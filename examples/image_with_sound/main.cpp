@@ -6,6 +6,7 @@
 #include "texture.h"
 #include "gl_helper.h"
 #include "audio/audio.h"
+#include "draw_objects/draw_textured_mesh_2d_t.h"
 #include <format>
 #include <iostream>
 #include <vector>
@@ -37,10 +38,11 @@ int main(){
 	layout (location = 0) in vec3 aPos;
 	layout (location = 1) in vec2 aTexCoord;
 	out vec2 TexCoord;
+	uniform mat3 model;
 
 	void main()
 	{
-	    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+	    gl_Position = vec4(model * aPos, 1.0);
 	    TexCoord = aTexCoord;
 	}
     )";
@@ -138,17 +140,26 @@ int main(){
 
     glClearColor(0.3f, 0.4f, 0.1f, 1.0f);
 
+    auto transform_uniform_id_r = program.get_uniform_id("model");
+    if(!transform_uniform_id_r.has_value()){
+	std::cout << transform_uniform_id_r.error();
+	return -1;
+    }
+    DrawTexturedMesh2DT draw_obj(
+	transform_uniform_id_r.value(),
+	&mesh,
+	&program,
+	glm::mat3(2.0f),
+	std::vector<std::pair<const Texture*, GLenum>> {std::pair(&texture, GL_TEXTURE0)});
 
     while(!window.should_close()){
 	glfwPollEvents();
 	glClear(GL_COLOR_BUFFER_BIT);
-	program.use_program();
-	texture.bind_texture(GL_TEXTURE0);
-	auto r = program.set_uniform(0, 0);
-	if(!r.has_value()){
-	    std::cout << r.error();
+	auto d_r = draw_obj.draw();
+	if(!d_r.has_value()){
+	    std::cout << d_r.error() << '\n';
+	    return -1;
 	}
-	mesh.draw_elements();
 	window.swap_buffers();
     }
 }

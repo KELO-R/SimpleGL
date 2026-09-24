@@ -68,7 +68,13 @@ target_sources(${PROJECT_NAME}
 	src/image.h
 	src/texture.h
 	src/audio/audio.h
+	src/draw_objects/draw_mesh_2d_t.h
+	src/draw_objects/draw_textured_mesh_2d.h
+	src/draw_objects/transform_2d.h
+	src/draw_objects/draw_mesh_2d.h
 	src/draw_objects/draw_object.h
+	src/draw_objects/draw_textured_mesh_2d_t.h
+	src/draw_objects/uniform_value.h
 )
 
 #examples

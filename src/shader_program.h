@@ -38,7 +38,7 @@ public:
 	return uniforms;
     }
     const std::expected<Uniform, std::string> get_uniform(size_t id) const;
-    const std::expected<Uniform, std::string> get_uniform(std::string_view name) const;
+    const std::expected<size_t, std::string> get_uniform_id(std::string_view name) const;
 
     const std::expected<void, std::string> set_uniform(size_t id, GLfloat v0) const;
     const std::expected<void, std::string> set_uniform(size_t id, glm::vec2 v) const;
@@ -53,25 +53,25 @@ public:
     const std::expected<void, std::string> set_uniform(size_t id, glm::uvec3 v) const;
     const std::expected<void, std::string> set_uniform(size_t id, glm::uvec4 v) const;
 
-    const std::expected<void, std::string> set_uniformv(size_t id, const GLfloat* ptr, GLsizei count);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::vec2* ptr, GLsizei count);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::vec3* ptr, GLsizei count);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::vec4* ptr, GLsizei count);
-    const std::expected<void, std::string> set_uniformv(size_t id, const GLint* ptr, GLsizei count);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::ivec2* ptr, GLsizei count);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::ivec3* ptr, GLsizei count);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::ivec4* ptr, GLsizei count);
-    const std::expected<void, std::string> set_uniformv(size_t id, const GLuint* ptr, GLsizei count);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::uvec2* ptr, GLsizei count);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::uvec3* ptr, GLsizei count);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::uvec4* ptr, GLsizei count);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat2* ptr, GLsizei count, GLboolean transpose);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat3* ptr, GLsizei count, GLboolean transpose);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat4* ptr, GLsizei count, GLboolean transpose);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat2x3* ptr, GLsizei count, GLboolean transpose);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat3x2* ptr, GLsizei count, GLboolean transpose);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat2x4* ptr, GLsizei count, GLboolean transpose);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat4x2* ptr, GLsizei count, GLboolean transpose);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat3x4* ptr, GLsizei count, GLboolean transpose);
-    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat4x3* ptr, GLsizei count, GLboolean transpose);
+    const std::expected<void, std::string> set_uniformv(size_t id, const GLfloat* ptr, GLsizei count) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::vec2* ptr, GLsizei count) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::vec3* ptr, GLsizei count) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::vec4* ptr, GLsizei count) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const GLint* ptr, GLsizei count) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::ivec2* ptr, GLsizei count) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::ivec3* ptr, GLsizei count) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::ivec4* ptr, GLsizei count) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const GLuint* ptr, GLsizei count) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::uvec2* ptr, GLsizei count) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::uvec3* ptr, GLsizei count) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::uvec4* ptr, GLsizei count) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat2* ptr, GLsizei count, GLboolean transpose) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat3* ptr, GLsizei count, GLboolean transpose) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat4* ptr, GLsizei count, GLboolean transpose) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat2x3* ptr, GLsizei count, GLboolean transpose) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat3x2* ptr, GLsizei count, GLboolean transpose) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat2x4* ptr, GLsizei count, GLboolean transpose) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat4x2* ptr, GLsizei count, GLboolean transpose) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat3x4* ptr, GLsizei count, GLboolean transpose) const;
+    const std::expected<void, std::string> set_uniformv(size_t id, const glm::mat4x3* ptr, GLsizei count, GLboolean transpose) const;
 };
