@@ -11,6 +11,31 @@
 #include <iostream>
 #include <vector>
 
+static const char* vertex_shader_source = R"(#version 330 core
+    layout (location = 0) in vec3 aPos;
+    layout (location = 1) in vec2 aTexCoord;
+    out vec2 TexCoord;
+    uniform mat3 model;
+
+    void main()
+    {
+	gl_Position = vec4(model * aPos, 1.0);
+	TexCoord = aTexCoord;
+    }
+)";
+static const char* fragment_shader_source = R"(#version 330 core
+    uniform sampler2D ourTexture;
+    in vec2 TexCoord;
+    out vec4 FragColor;
+
+    void main()
+    {
+	FragColor = texture(ourTexture, TexCoord);
+	//FragColor = vec4(TexCoord, 0.0, 1.0);
+	//FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    } 
+)";
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -34,30 +59,6 @@ int main(){
     glfwSetFramebufferSizeCallback(glfwGetCurrentContext(), framebuffer_size_callback);
 
 
-    const char* vertex_shader_source = R"(#version 330 core
-	layout (location = 0) in vec3 aPos;
-	layout (location = 1) in vec2 aTexCoord;
-	out vec2 TexCoord;
-	uniform mat3 model;
-
-	void main()
-	{
-	    gl_Position = vec4(model * aPos, 1.0);
-	    TexCoord = aTexCoord;
-	}
-    )";
-    const char* fragment_shader_source = R"(#version 330 core
-	uniform sampler2D ourTexture;
-	in vec2 TexCoord;
-	out vec4 FragColor;
-
-	void main()
-	{
-	    FragColor = texture(ourTexture, TexCoord);
-	    //FragColor = vec4(TexCoord, 0.0, 1.0);
-	    //FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-	} 
-    )";
 
     auto frag_shader_r = Shader::try_from(fragment_shader_source, GL_FRAGMENT_SHADER);
     if(!frag_shader_r.has_value()){
@@ -115,7 +116,7 @@ int main(){
     }
     Mesh mesh {std::move(mesh_r.value())};
 
-    auto image_path = "image.png";
+    auto image_path = "res/image.png";
     auto image_r = Image::from_file(image_path, 3);
     if(!image_r.has_value()){
 	std::cout << image_r.error() << std::endl;
@@ -136,7 +137,7 @@ int main(){
 	return -1;
     }
     Audio audio {std::move(audio_r.value())};
-    audio.play("music.wav");
+    audio.play("res/music.wav");
 
     glClearColor(0.3f, 0.4f, 0.1f, 1.0f);
 
@@ -163,3 +164,4 @@ int main(){
 	window.swap_buffers();
     }
 }
+
