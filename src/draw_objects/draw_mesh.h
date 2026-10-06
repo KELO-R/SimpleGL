@@ -3,11 +3,11 @@
 #include "mesh.h"
 #include "shader_program.h"
 
-struct DrawMesh2D : public IDrawObject{
+struct DrawMesh : public IDrawObject{
     const Mesh* mesh;
     const ShaderProgram* program;
 public:
-    DrawMesh2D(const Mesh* mesh, const ShaderProgram* program)
+    DrawMesh(const Mesh* mesh, const ShaderProgram* program)
 	:mesh(mesh), program(program){}
     std::expected<void, std::string> draw() override{
 	if(program)

@@ -116,7 +116,7 @@ int main(){
     }
     Mesh mesh {std::move(mesh_r.value())};
 
-    auto image_path = "res/image.png";
+    auto image_path = "res/images/image.png";
     auto image_r = Image::from_file(image_path, 3);
     if(!image_r.has_value()){
 	std::cout << image_r.error() << std::endl;
@@ -147,11 +147,11 @@ int main(){
 	return -1;
     }
     DrawTexturedMesh2DT draw_obj(
-	transform_uniform_id_r.value(),
 	&mesh,
 	&program,
-	glm::mat3(2.0f),
-	std::vector<std::pair<const Texture*, GLenum>> {std::pair(&texture, GL_TEXTURE0)});
+	std::vector<std::pair<const Texture*, GLenum>> {std::pair(&texture, GL_TEXTURE0)},
+	transform_uniform_id_r.value(),
+	glm::mat3(2.0f));
 
     while(!window.should_close()){
 	glfwPollEvents();

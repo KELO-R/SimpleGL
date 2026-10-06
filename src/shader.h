@@ -3,6 +3,7 @@
 #include <expected>
 #include <string>
 #include <memory>
+#include <filesystem>
 
 class Shader{
 private:
@@ -21,4 +22,5 @@ private:
 public:
     friend class ShaderProgram;
     static std::expected<Shader, std::string> try_from(const char* const source, GLenum gl_shader_type);
+    static std::expected<Shader, std::string> try_from(const std::filesystem::path& path, GLenum gl_shader_type);
 };

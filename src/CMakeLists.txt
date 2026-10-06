@@ -84,12 +84,15 @@ if(SIMPLE_ENGINE_BUILD_WITH_DRAW_OBJECTS)
 	PUBLIC
 	    FILE_SET HEADERS
 	    FILES 
-		draw_objects/draw_mesh_2d_t.h
-		draw_objects/draw_textured_mesh_2d.h
-		draw_objects/transform_2d.h
-		draw_objects/draw_mesh_2d.h
 		draw_objects/draw_object.h
-		draw_objects/draw_textured_mesh_2d_t.h
+		draw_objects/draw_mesh.h
+		draw_objects/draw_textured_mesh.h
 		draw_objects/uniform_value.h
+		draw_objects/transform_2d.h
+		draw_objects/transform_3d.h
+		draw_objects/draw_mesh_2d_t.h
+		draw_objects/draw_mesh_3d_t.h
+		draw_objects/draw_textured_mesh_2d_t.h
+		draw_objects/draw_textured_mesh_3d_t.h
     )
 endif()
