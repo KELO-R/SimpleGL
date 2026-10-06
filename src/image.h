@@ -1,9 +1,10 @@
 #pragma once
 #include <memory>
 #include <expected>
-
+#include "stb_image.h"
+#ifdef STBI_INCLUDE_STB_IMAGE_H
 class Image{
-    static void free_data(unsigned char* data);//in cpp{
+    static void free_data(unsigned char* data);
     std::unique_ptr<unsigned char, decltype(&free_data)> data;
     int height;
     int width;
@@ -29,3 +30,4 @@ public:
 	    int requested_channels_count = 0, 
 	    bool flip_vertically = false);
 };
+#endif

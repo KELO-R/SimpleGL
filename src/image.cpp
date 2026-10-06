@@ -1,4 +1,3 @@
-#include "stb_image.h"
 #include "image.h"
 #include <format>
 

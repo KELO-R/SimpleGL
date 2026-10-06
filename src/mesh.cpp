@@ -34,16 +34,13 @@ std::expected<Mesh, std::string> Mesh::try_from(
     glGenBuffers(1, vbo.get());
     glBindBuffer(GL_ARRAY_BUFFER, *vbo);
     glBufferData(GL_ARRAY_BUFFER, vertices_byte_size, vertices, GL_STATIC_DRAW);
-    check_gl("after vbo");
 
     Vao ebo {new GLuint, free_bo};
     glGenBuffers(1, ebo.get());
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_byte_size, indices, GL_STATIC_DRAW);
-    check_gl("after ebo");
 
     auto r = setup_attrib_layout(layout);
-    check_gl("after setup attrib layout");
     if(!r.has_value()){
 	return std::unexpected(std::format("Mesh creation failed! {}", r.error()));
     }

@@ -3,7 +3,7 @@
 #include <expected>
 #include <string>
 #include <memory>
-#include "Image.h"
+#include "image.h"
 
 
 struct Texture{
@@ -99,6 +99,8 @@ public:
 	this->source_format = source_format;
 	return *this;
     }
+
+    #ifdef STBI_INCLUDE_STB_IMAGE_H
     inline TextureBuilder& from_image(const Image& image){
 	this->width = image.get_width();
 	this->height = image.get_height();
@@ -118,6 +120,7 @@ public:
 	this->source_type = GL_UNSIGNED_BYTE;
 	return *this;
     }
+    #endif
     inline std::expected<Texture, std::string> build(){
 	return Texture::texture2d(
 	    width,

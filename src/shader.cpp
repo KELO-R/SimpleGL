@@ -45,6 +45,5 @@ std::expected<Shader, std::string> Shader::try_from(const std::filesystem::path&
     ss << ifs.rdbuf();
     std::string shader_source = ss.str();
     ifs.close();
-    std::cout << shader_source << std::endl;
     return std::move(try_from(shader_source.c_str(), gl_shader_type));
 }

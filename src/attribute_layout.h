@@ -4,9 +4,9 @@
 
 struct AttributeLayout{
     unsigned int count;
-    GLenumWrapper type;
+    GLenumAttributeWrapper type;
     GLboolean normalize;
 
-    AttributeLayout(unsigned int count, GLenumWrapper type, GLboolean normalize)
+    AttributeLayout(unsigned int count, GLenumAttributeWrapper type, GLboolean normalize)
 	: count(count), type(type), normalize(normalize){}
 };

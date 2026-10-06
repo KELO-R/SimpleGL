@@ -1,40 +1,15 @@
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
 #include "attribute_layout.h"
-#include "engine.h"
-#include "window.h"
 #include "shader_program.h"
 #include "mesh.h"
 #include "texture.h"
-#include "gl_helper.h"
-#include "audio/audio.h"
+#include "image.h"
 #include "draw_objects/draw_textured_mesh_2d_t.h"
+#include <filesystem>
 #include <format>
 #include <iostream>
 #include <vector>
-
-static const char* vertex_shader_source = R"(#version 330 core
-    layout (location = 0) in vec3 aPos;
-    layout (location = 1) in vec2 aTexCoord;
-    out vec2 TexCoord;
-    uniform mat3 model;
-
-    void main()
-    {
-	gl_Position = vec4(model * aPos, 1.0);
-	TexCoord = aTexCoord;
-    }
-)";
-static const char* fragment_shader_source = R"(#version 330 core
-    uniform sampler2D ourTexture;
-    in vec2 TexCoord;
-    out vec4 FragColor;
-
-    void main()
-    {
-	FragColor = texture(ourTexture, TexCoord);
-	//FragColor = vec4(TexCoord, 0.0, 1.0);
-	//FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-    } 
-)";
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -42,32 +17,32 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 int main(){
-    auto engine_r = EngineBuilder().build();
-    if(!engine_r.has_value()){
-	std::cout << engine_r.error() << std::endl;
+    if(!glfwInit()){
+	std::cout << "glfw initalization failed!"<< std::endl;
 	return -1;
     }
-    Engine engine {std::move(engine_r.value())};
-
-    auto window_r = Window::opengl_window();
-    if(!window_r.has_value()){
-	std::cout << window_r.error() << std::endl;
+    GLFWwindow* window = glfwCreateWindow(500, 500, "simple_gl, example: image_window", NULL, NULL);
+    if(!window){
+	std::cout << "glfw window creation failed!" << std::endl;
 	return -1;
     }
-    Window window {std::move(window_r.value())};
-    window.make_context_current();
+    glfwMakeContextCurrent(window);
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+	std::cout << "Failed to initialize GLAD" << std::endl;
+	return -1;
+    }  
     glfwSetFramebufferSizeCallback(glfwGetCurrentContext(), framebuffer_size_callback);
 
-
-
-    auto frag_shader_r = Shader::try_from(fragment_shader_source, GL_FRAGMENT_SHADER);
+    auto shaders_dir = std::filesystem::current_path().append("res").append("shaders");
+    auto frag_shader_r = Shader::try_from(std::filesystem::path(shaders_dir).append("basic.frag"), GL_FRAGMENT_SHADER);
     if(!frag_shader_r.has_value()){
 	std::cout << frag_shader_r.error() << std::endl;
 	return -1;
     }
     Shader frag_shader {std::move(frag_shader_r.value())};
 
-    auto vert_shader_r = Shader::try_from(vertex_shader_source, GL_VERTEX_SHADER);
+    auto vert_shader_r = Shader::try_from(std::filesystem::path(shaders_dir).append("basic.vert"), GL_VERTEX_SHADER);
     if(!vert_shader_r.has_value()){
 	std::cout << vert_shader_r.error() << std::endl;
 	return -1;
@@ -91,20 +66,19 @@ int main(){
     }
 
     float vertices[] = {
-	// positions          // texture coords
-	 0.5f,  0.5f, 0.0f,   1.0f, 1.0f,   // top right
-	 0.5f, -0.5f, 0.0f,   1.0f, 0.0f,   // bottom right
-	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f,   // bottom left
-	-0.5f,  0.5f, 0.0f,   0.0f, 1.0f    // top left 
+	 0.5f,  0.5f, 0.0f,   1.0f, 1.0f,
+	 0.5f, -0.5f, 0.0f,   1.0f, 0.0f,
+	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f,
+	-0.5f,  0.5f, 0.0f,   0.0f, 1.0f
     };
-    unsigned int indices[] = {  // note that we start from 0!
-	0, 1, 3,   // first triangle
-	1, 2, 3    // second triangle
+    unsigned int indices[] = {
+	0, 1, 3,
+	1, 2, 3
     }; 
 
     std::vector<AttributeLayout> layout {
-	AttributeLayout(3, GLenumWrapper::FLOAT, GL_FALSE),
-	AttributeLayout(2, GLenumWrapper::FLOAT, GL_FALSE)
+	AttributeLayout(3, GLenumAttributeWrapper::FLOAT, GL_FALSE),
+	AttributeLayout(2, GLenumAttributeWrapper::FLOAT, GL_FALSE)
     }; 
 
     auto mesh_r = Mesh::try_from(layout, 
@@ -124,21 +98,14 @@ int main(){
     }
     Image image {std::move(image_r.value())};
     
-    auto texture_r = TextureBuilder().from_image(image).build();
+    auto texture_r = TextureBuilder()
+	.from_image(image)
+	.build();
     if(!texture_r){
 	std::cout << texture_r.error() << std::endl;
 	return -1;
     }
     Texture texture = std::move(texture_r.value());
-
-    auto audio_r = Audio::create();
-    if(!audio_r.has_value()){
-	std::cout << audio_r.error() << std::endl;
-	return -1;
-    }
-    Audio audio {std::move(audio_r.value())};
-    audio.play("res/music.wav");
-
     glClearColor(0.3f, 0.4f, 0.1f, 1.0f);
 
     auto transform_uniform_id_r = program.get_uniform_id("model");
@@ -153,7 +120,7 @@ int main(){
 	transform_uniform_id_r.value(),
 	glm::mat3(2.0f));
 
-    while(!window.should_close()){
+    while(!glfwWindowShouldClose(window)){
 	glfwPollEvents();
 	glClear(GL_COLOR_BUFFER_BIT);
 	auto d_r = draw_obj.draw();
@@ -161,7 +128,7 @@ int main(){
 	    std::cout << d_r.error() << '\n';
 	    return -1;
 	}
-	window.swap_buffers();
+	glfwSwapBuffers(window);
     }
 }
 

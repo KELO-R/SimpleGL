@@ -1,8 +1,8 @@
 #pragma once
 #include "glad/glad.h"
 #include <assert.h>
-#include <iostream>
-enum GLenumWrapper{
+
+enum GLenumAttributeWrapper{
     BYTE,
     UNSIGNED_BYTE,
 
@@ -21,7 +21,7 @@ enum GLenumWrapper{
     DOUBLE,
 };
 
-inline size_t glenum_size(GLenumWrapper glenum){
+inline size_t glenum_size(GLenumAttributeWrapper glenum){
     switch(glenum){
 	case BYTE:
 	case UNSIGNED_BYTE:
@@ -46,7 +46,7 @@ inline size_t glenum_size(GLenumWrapper glenum){
     }
     assert(false);
 }
-inline GLenum unwrap(GLenumWrapper glenum){
+inline GLenum unwrap(GLenumAttributeWrapper glenum){
     switch(glenum){
 	case BYTE:
 	    return GL_BYTE;
@@ -79,39 +79,4 @@ inline GLenum unwrap(GLenumWrapper glenum){
 	    return GL_DOUBLE;
     }
     assert(false);
-}
-
-template <GLenumWrapper T>
-struct size;
-
-template<> struct size<BYTE>{static const size_t get = 1;};
-template<> struct size<UNSIGNED_BYTE>{static const size_t get = 1;};
-
-template<> struct size<SHORT>{static const size_t get = 2;};
-template<> struct size<UNSIGNED_SHORT>{static const size_t get = 2;};
-template<> struct size<HALF_FLOAT>{static const size_t get = 2;};
-
-template<> struct size<INT>{static const size_t get = 4;};
-template<> struct size<UNSIGNED_INT>{static const size_t get = 4;};
-template<> struct size<FLOAT>{static const size_t get = 4;};
-template<> struct size<FIXED>{static const size_t get = 4;};
-template<> struct size<INT_2_10_10_10_REV>{static const size_t get = 4;};
-template<> struct size<UNSIGNED_INT_2_10_10_10_REV>{static const size_t get = 4;};
-template<> struct size<UNSIGNED_INT_10F_11F_11F_REV>{static const size_t get = 4;};
-
-template<> struct size<DOUBLE>{static const size_t get = 8;};
-
-inline void check_gl(const char* where)
-{
-    GLenum err;
-
-    while ((err = glGetError()) != GL_NO_ERROR) {
-        std::cerr << "OpenGL error at "
-                  << where
-                  << ": 0x"
-                  << std::hex
-                  << err
-                  << std::dec
-                  << '\n';
-    }
 }

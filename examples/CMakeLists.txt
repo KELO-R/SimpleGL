@@ -1,21 +1,21 @@
 cmake_minimum_required(VERSION 3.20)
-project(SIMPLE_ENGINE_EXAMPLES)
+project(SIMPLE_GL_EXAMPLES)
 
-if(${SIMPLE_ENGINE_BUILD_WITH_AUDIO}
-    AND ${SIMPLE_ENGINE_BUILD_WITH_DRAW_OBJECTS})
-    add_executable(image_with_sound image_with_sound/main.cpp)
-    target_link_libraries(image_with_sound simple_engine)
+if(SIMPLE_GL_USE_STB_IMAGE)
+    add_subdirectory(dep/glfw)
 
-    add_executable(particles)
-    target_sources(particles
+    add_executable(image_window)
+    target_link_libraries(image_window 
+	PRIVATE 
+	    simple_gl
+	    glfw
+    )
+    target_include_directories(image_window PRIVATE simple_gl)
+    target_sources(image_window
 	PRIVATE
-	particles/main.cpp
-	PRIVATE
-	    FILE_SET HEADERS
-	    FILES 
-		particles/particle_generator_cpu.h)
-    target_link_libraries(particles simple_engine)
+	    image_window/main.cpp
+    )
 endif()
 
-file(COPY ${SIMPLE_ENGINE_EXAMPLES_SOURCE_DIR}/res/
-    DESTINATION ${SIMPLE_ENGINE_EXAMPLES_BINARY_DIR}/res)
+file(COPY ${SIMPLE_GL_EXAMPLES_SOURCE_DIR}/res/
+    DESTINATION ${SIMPLE_GL_EXAMPLES_BINARY_DIR}/res)

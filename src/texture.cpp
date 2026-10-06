@@ -1,6 +1,6 @@
 #include "texture.h"
-
 #include <iostream>
+
 std::expected<Texture, std::string> Texture::texture2d(
 	GLsizei width,
 	GLsizei height,
