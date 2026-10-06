@@ -37,6 +37,12 @@ public:
 	glActiveTexture(texture_unit_slot);
 	glBindTexture(GL_TEXTURE_2D, *texture);
     }
+
+    const void set_tex_parameter(GLenum pname, GLfloat param) const;
+    const void set_tex_parameter(GLenum pname, GLint param) const;
+
+    const void set_tex_parameter_v(GLenum pname, const GLfloat* params) const;
+    const void set_tex_parameter_v(GLenum pname, const GLint* params) const;
 };
 
 struct TextureBuilder{

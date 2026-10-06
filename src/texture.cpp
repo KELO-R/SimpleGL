@@ -20,7 +20,7 @@ std::expected<Texture, std::string> Texture::texture2d(
     glGenTextures(1, texture.get());
     glBindTexture(target, *texture);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);	
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
@@ -32,4 +32,22 @@ std::expected<Texture, std::string> Texture::texture2d(
     std::cout << "height :" << width <<'\n';
     std::cout << "data != nullptr :" << (data != nullptr) <<'\n';
     return Texture(std::move(texture), target);
+}
+
+const void Texture::set_tex_parameter(GLenum pname, GLfloat param) const{
+    glBindTexture(target, *texture);
+    glTexParameterf(target, pname, param);
+}
+const void Texture::set_tex_parameter(GLenum pname, GLint param) const{
+    glBindTexture(target, *texture);
+    glTexParameteri(target, pname, param);
+}
+
+const void Texture::set_tex_parameter_v(GLenum pname, const GLfloat* params) const{
+    glBindTexture(target, *texture);
+    glTexParameterfv(target, pname, params);
+}
+const void Texture::set_tex_parameter_v(GLenum pname, const GLint* params) const{
+    glBindTexture(target, *texture);
+    glTexParameteriv(target, pname, params);
 }

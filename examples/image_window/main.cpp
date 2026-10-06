@@ -106,6 +106,8 @@ int main(){
 	return -1;
     }
     Texture texture = std::move(texture_r.value());
+    texture.set_tex_parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    texture.set_tex_parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glClearColor(0.3f, 0.4f, 0.1f, 1.0f);
 
     auto transform_uniform_id_r = program.get_uniform_id("model");
