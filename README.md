@@ -25,3 +25,9 @@ cmake -S. -B build
 
 ## Examples
 Project has example projects that show how SimpleGL can be used.
+**IMPORTANT**
+**Examples use very primitive structure, and have resources not embedded into them, so examples should be launched from the build directory directly.**
+```
+cd path\to\project
+cd build\examples
+```
