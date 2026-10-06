@@ -1,12 +1,13 @@
 #pragma once
-#include "glad/glad.h"
 #include "gl_helper.h"
+#include "glad/glad.h"
 
-struct AttributeLayout{
-    unsigned int count;
-    GLenumAttributeWrapper type;
-    GLboolean normalize;
+struct AttributeLayout {
+	unsigned int count;
+	GLenumAttributeWrapper type;
+	GLboolean normalize;
 
-    AttributeLayout(unsigned int count, GLenumAttributeWrapper type, GLboolean normalize)
-	: count(count), type(type), normalize(normalize){}
+	AttributeLayout(unsigned int count, GLenumAttributeWrapper type,
+	                GLboolean normalize)
+	    : count(count), type(type), normalize(normalize) {}
 };
