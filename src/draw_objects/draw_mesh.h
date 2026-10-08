@@ -3,17 +3,19 @@
 #include "mesh.h"
 #include "shader_program.h"
 
-struct DrawMesh : public IDrawObject{
-    const Mesh* mesh;
-    const ShaderProgram* program;
-public:
-    DrawMesh(const Mesh* mesh, const ShaderProgram* program)
-	:mesh(mesh), program(program){}
-    std::expected<void, std::string> draw() override{
-	if(program)
-	    program->use_program();
-	if(mesh)
-	    mesh->draw_elements();
-	return {};
-    }
-};
+namespace SimpleGL{
+	struct DrawMesh : public IDrawObject{
+		const Mesh* mesh;
+		const ShaderProgram* program;
+	public:
+		DrawMesh(const Mesh* mesh, const ShaderProgram* program)
+		:mesh(mesh), program(program){}
+		std::expected<void, std::string> draw() override{
+		if(program)
+			program->use_program();
+		if(mesh)
+			mesh->draw_elements();
+		return {};
+		}
+	};
+}
