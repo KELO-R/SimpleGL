@@ -129,4 +129,5 @@ int main() {
 		}
 		glfwSwapBuffers(window);
 	}
+	glfwTerminate();
 }
