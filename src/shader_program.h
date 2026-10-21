@@ -32,7 +32,7 @@ namespace SimpleGL {
 
 	  public:
 		static std::expected<ShaderProgram, std::string>
-		try_from(const std::vector<Shader> &shaders);
+		try_from(const std::vector<Shader*> &shaders);
 
 		void use_program() const;
 		GLint get_uniform_location(std::string_view uniform_name) const;

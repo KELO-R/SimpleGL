@@ -7,12 +7,12 @@ namespace SimpleGL{
 	}
 
 	std::expected<ShaderProgram, std::string>
-	ShaderProgram::try_from(const std::vector<Shader> &shaders) {
+	ShaderProgram::try_from(const std::vector<Shader*> &shaders) {
 		std::unique_ptr<GLuint, decltype(&free_program)> program(
 			new GLuint(glCreateProgram()), free_program);
 
-		for (auto &it : shaders) {
-			glAttachShader(*program, *it.shader);
+		for (auto it : shaders) {
+			glAttachShader(*program, *(it->shader));
 		}
 		glLinkProgram(*program);
 		int program_link_status;
