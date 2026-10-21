@@ -22,6 +22,7 @@ cd path\to\project
 mkdir build
 cmake -S. -B build
 ```
+build project using your build system.
 
 ## Examples
 Project has example projects that show how SimpleGL can be used.
