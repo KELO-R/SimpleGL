@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <memory>
 #include <string>
-#include <vector>
+#include <span>
 
 namespace SimpleGL{
 	class Mesh {
@@ -28,7 +28,7 @@ namespace SimpleGL{
 
 	  public:
 		static std::expected<Mesh, std::string>
-		try_from(const std::vector<AttributeLayout> &vbo_layout,
+		try_from(const std::span<const AttributeLayout> layout,
 				 const void *vertices, size_t vertices_byte_size,
 				 const void *indices, size_t indices_byte_size,
 				 size_t indices_count);

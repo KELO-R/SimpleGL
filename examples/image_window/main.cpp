@@ -79,10 +79,10 @@ int main() {
 		-0.5f,  0.5f,  0.0f,  0.0f,  1.0f};
 	unsigned int indices[] = {0, 1, 3, 1, 2, 3};
 
-	std::vector<AttributeLayout> layout{
+	AttributeLayout layout[] = {
 		AttributeLayout(3, GLenumAttributeWrapper::FLOAT, GL_FALSE),
-		AttributeLayout(2, GLenumAttributeWrapper::FLOAT, GL_FALSE)};
-
+		AttributeLayout(2, GLenumAttributeWrapper::FLOAT, GL_FALSE)
+	};
 	auto mesh_r = Mesh::try_from(layout, vertices, sizeof(vertices), indices,
 			sizeof(indices), sizeof(indices) / sizeof(unsigned int));
 	if (!mesh_r.has_value()) {

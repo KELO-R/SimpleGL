@@ -5,7 +5,7 @@
 
 namespace SimpleGL {
 	std::expected<void, std::string> inline setup_attrib_layout(
-		const std::vector<AttributeLayout> &attributes) {
+		const std::span<const AttributeLayout> attributes) {
 		unsigned int stride_size{};
 		if (attributes.size() > 1) {
 			for (size_t i{}; i < attributes.size(); i++) {
@@ -26,7 +26,7 @@ namespace SimpleGL {
 
 	// TODO address the ambiguity type used for indices
 	std::expected<Mesh, std::string>
-	Mesh::try_from(const std::vector<AttributeLayout> &layout, const void *vertices,
+	Mesh::try_from(const std::span<const AttributeLayout> layout, const void *vertices,
 				   size_t vertices_byte_size, const void *indices,
 				   size_t indices_byte_size, size_t indices_count) {
 		Vao vao{new GLuint, free_vao};
